@@ -1,0 +1,96 @@
+// assets/TimeSlotsModal.scss
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(34, 41, 47, 0.35);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal.timeslots-modal {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px 0 rgba(44, 62, 80, 0.18);
+  min-width: 350px;
+  max-width: 420px;
+  padding: 24px 24px 32px 24px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal__close {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #23355d;
+  cursor: pointer;
+}
+
+.modal__header {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #23355d;
+}
+.modal__subheader {
+  font-size: 15px;
+  color: #666;
+  margin-top: 4px;
+}
+
+.timeslots-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+.timeslot-btn {
+  flex: 1 1 45%;
+  min-width: 120px;
+  background: #f7fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-bottom: 4px;
+  font-size: 15px;
+  color: #23355d;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+
+  &.free {
+    &:hover {
+      background: #eafaf1;
+      color: #27ae60;
+    }
+    .timeslot-check {
+      color: #27ae60;
+      margin-left: 6px;
+      font-size: 20px;
+    }
+  }
+  &.busy {
+    background: #fbeaea;
+    color: #e74c3c;
+    cursor: not-allowed;
+    .timeslot-cross {
+      color: #e74c3c;
+      margin-left: 6px;
+      font-size: 20px;
+    }
+  }
+}
