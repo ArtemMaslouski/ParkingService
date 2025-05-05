@@ -1,17 +1,17 @@
-import { Controller, Get, Param } from '@nestjs/common';
-import { ParkingService } from './parking.service';
+// parking-spot.controller.ts
+import { Controller, Get, Param, Query } from '@nestjs/common';
+import { ParkingSpotService } from './parking.service';
 
-@Controller('parking-spots')
-export class ParkingController {
-  constructor(private readonly parkingService: ParkingService) {}
+@Controller('api/parking-spots')
+export class ParkingSpotController {
+  constructor(private readonly parkingSpotService: ParkingSpotService) {}
 
-  @Get()
-  async getAvailableParkingSpots() {
-    return this.parkingService.getAvailableParkingSpots();
-  }
-
+  // GET /api/parking-spots/:id/available-times?date=2025-05-06
   @Get(':id/available-times')
-  async getAvailableTimes(@Param('id') id: number) {
-    return this.parkingService.getAvailableTimes(id);
+  async getAvailableTimes(
+    @Param('id') id: string,
+    @Query('date') date: string,
+  ) {
+    return await this.parkingSpotService.getAvailableTimes(Number(id), date);
   }
 }
