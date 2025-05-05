@@ -1,11 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, FormEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { loginUser, registerUser } from '../api/auth';
 import '../assets/Authorization.scss';
 
 const AuthForm: React.FC = () => {
   const [isLogin, setIsLogin] = useState<boolean>(true);
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [error, setError] = useState<string>('');
+  const navigate = useNavigate();
 
   const toggleAuthMode = (): void => {
     setIsLogin(!isLogin);
+    setError('');
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError('');
+    try {
+      const response = isLogin
+        ? await loginUser(email, password)
+        : await registerUser(email, password);
+
+      if (response.data.access_token) {
+        localStorage.setItem('token', response.data.access_token);
+        navigate('/parking');
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Произошла ошибка');
+    }
   };
 
   return (
@@ -26,13 +50,24 @@ const AuthForm: React.FC = () => {
             Регистрация
           </button>
         </div>
-        <div className='auth-form'>
-          <input type='email' placeholder='Email' />
-          <input type='password' placeholder='Пароль' />
-          <button className='auth-button'>
+        <form className='auth-form' onSubmit={handleSubmit}>
+          <input
+            type='email'
+            placeholder='Email'
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input
+            type='password'
+            placeholder='Пароль'
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          {error && <div className='auth-error'>{error}</div>}
+          <button type='submit' className='auth-button'>
             {isLogin ? 'Войти' : 'Зарегистрироваться'}
           </button>
-        </div>
+        </form>
       </div>
     </div>
   );
