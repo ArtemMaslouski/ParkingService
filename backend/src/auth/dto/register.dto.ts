@@ -6,10 +6,10 @@ export class RegisterDto {
   @IsString()
   @IsEmail()
   @IsNotEmpty()
-  email: string;
+  Email: string;
 
   @ApiProperty({ description: 'Пароль пользователя' })
   @IsString()
   @IsNotEmpty()
-  password: string;
+  Password: string;
 }
