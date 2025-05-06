@@ -21,40 +21,47 @@ export class AuthService {
 
   async register(registerDTO: RegisterDto) {
     try {
-      const { Email, Password } = registerDTO;
+      const { email, password } = registerDTO;
 
-      const hashedPassword = await bcrypt.hash(Password, 10);
+      const hashedPassword = await bcrypt.hash(password, 10);
 
       return this.prisma.user.create({
         data: {
-          email: Email,
+          email,
           password: hashedPassword,
         },
       });
-    } catch {
+    } catch(error) {
+      console.error(error)
       throw new Error('Во время регистрации произошла ошибка');
     }
   }
 
   async login(loginDTO: LoginDTO, @Req() req: Request, @Res() res: Response) {
-    const { email, password } = loginDTO;
-    const user = await this.prisma.user.findUnique({
-      where: {
-        email,
-      },
-    });
+    try {
+      const { email, password } = loginDTO;
+      const user = await this.prisma.user.findUnique({
+        where: {
+          email,
+        },
+      });
 
-    if (!user) {
-      return res.status(404).send({ message: 'Пользователя не существует' });
+      if (!user) {
+        return res.status(404).send({ message: 'Пользователя не существует' });
+      }
+
+      const validPassword = await bcrypt.compare(password, user.password);
+
+      if (!validPassword) {
+        return res.status(401).send({ message: 'Неверный пароль' });
+      }
+
+      return this.createToken(user, res);
+    } catch(error) {
+      console.error(error)
+      throw new Error(error)
     }
-
-    const validPassword = await bcrypt.compare(password, user.password);
-
-    if (!validPassword) {
-      return res.status(401).send({ message: 'Неверный пароль' });
-    }
-
-    return this.createToken(user, res);
+    
   }
 
   createToken(user: UserPayload, res: Response) {
