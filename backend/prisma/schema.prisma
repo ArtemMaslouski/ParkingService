@@ -8,31 +8,29 @@ generator client {
 }
 
 model User {
-  id       Int           @id @default(autoincrement())
-  email    String        @unique
-  password String
-  bookings Reservation[]
+  id           Int           @id @default(autoincrement())
+  email        String        @unique
+  password     String
+  reservations Reservation[] @relation("UserReservations")
+  @@map("user")
 }
 
 model ParkingSpot {
-  id            Int            @id @default(autoincrement())
-  location      String
-  availableTimes AvailableTime[]
-  reservations   Reservation[]  
-}
-
-model AvailableTime {
-  id            Int       @id @default(autoincrement())
-  time          DateTime
-  parkingSpotId Int
-  parkingSpot   ParkingSpot @relation(fields: [parkingSpotId], references: [id])
+  id           Int           @id @default(autoincrement())
+  location     String
+  reservations Reservation[] @relation("SpotReservations")
+  @@map("parkingspot")
 }
 
 model Reservation {
-  id             Int       @id @default(autoincrement())
-  userId         Int
-  parkingSpotId  Int
-  reservedAt     DateTime  @default(now())
-  parkingSpot    ParkingSpot @relation(fields: [parkingSpotId], references: [id])
-  user           User @relation(fields: [userId], references: [id])
+  id             Int          @id @default(autoincrement())
+  userId         Int          @map("user_id")
+  parkingSpotId  Int          @map("parkingSpotId")
+  reservedDate   DateTime?    @map("reserved_date")
+  startTime      DateTime?    @map("start_time")
+  endTime        DateTime?    @map("end_time")
+  status         String?
+  user           User         @relation("UserReservations", fields: [userId], references: [id])
+  parkingSpot    ParkingSpot  @relation("SpotReservations", fields: [parkingSpotId], references: [id])
+  @@map("reservation")
 }

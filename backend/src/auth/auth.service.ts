@@ -31,8 +31,8 @@ export class AuthService {
           password: hashedPassword,
         },
       });
-    } catch(error) {
-      console.error(error)
+    } catch (error) {
+      console.error(error);
       throw new Error('Во время регистрации произошла ошибка');
     }
   }
@@ -57,11 +57,10 @@ export class AuthService {
       }
 
       return this.createToken(user, res);
-    } catch(error) {
-      console.error(error)
-      throw new Error(error)
+    } catch (error) {
+      console.error(error);
+      throw new Error(error);
     }
-    
   }
 
   createToken(user: UserPayload, res: Response) {
