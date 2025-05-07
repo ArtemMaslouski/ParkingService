@@ -5,11 +5,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.enableCors({
-    origin: 'http://localhost:3000', // Укажи URL твоего фронтенда
-    methods: 'GET,POST,PUT,DELETE',
-    allowedHeaders: 'Content-Type, Authorization',
-  });
+  app.enableCors();
 
   const config = new DocumentBuilder()
     .setTitle('Parking API')
